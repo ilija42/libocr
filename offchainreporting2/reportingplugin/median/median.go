@@ -436,6 +436,7 @@ func (nm *numericalMedian) Report(ctx context.Context, repts types.ReportTimesta
 		return false, nil, err
 	}
 	if !should {
+		fmt.Printf("\n ***** Shouldn't report new round \n")
 		return false, nil, nil
 	}
 	report, err := nm.reportCodec.BuildReport(paos)
@@ -446,6 +447,7 @@ func (nm *numericalMedian) Report(ctx context.Context, repts types.ReportTimesta
 		return false, nil, fmt.Errorf("report violates MaxReportLength limit set by ReportCodec (%v vs %v)", len(report), nm.maxReportLength)
 	}
 
+	fmt.Printf("\n ***** Report new round \n")
 	return true, report, nil
 }
 
@@ -485,6 +487,10 @@ func (nm *numericalMedian) shouldReport(ctx context.Context, repts types.ReportT
 			resultRoundRequested.round,
 			resultRoundRequested.err =
 			nm.contractTransmitter.LatestRoundRequested(ctx, nm.offchainConfig.DeltaC)
+		fmt.Printf("\n ***** LatestRoundRequested results:\n configDigest:%s \n epoch:%d round:%d \n",
+			resultRoundRequested.configDigest,
+			resultRoundRequested.epoch,
+			resultRoundRequested.round)
 	})
 	subs.Wait()
 
